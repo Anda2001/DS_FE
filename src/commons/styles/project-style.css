@@ -286,8 +286,8 @@
 }
 
 :local(.tablesInRow) {
-    width:800px;
-    height: 350px;
+    width:1200px;
+    height: 500px;
     position: relative;
 
 }
@@ -305,7 +305,7 @@
 }
 :local(.rightPositionedTable) {
     margin-right: 40px;
-    width: 800px;
+    width: 1200px;
 }
 :local(.tableColors) {
     background: #DCDCDC;

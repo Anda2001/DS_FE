@@ -2,6 +2,8 @@ import React from 'react';
 import validate from "./validators/person-validators";
 import Button from "react-bootstrap/Button";
 import * as API_USERS from "../api/person-api";
+import * as API_DEVICES from "../../device/api/device-api.js";
+
 import APIResponseErrorMessage from "../../commons/errorhandling/api-response-error-message";
 import {Col, Row} from "reactstrap";
 import { FormGroup, Input, Label} from 'reactstrap';
@@ -12,6 +14,7 @@ class PersonForm extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(props);
         this.toggleForm = this.toggleForm.bind(this);
         this.reloadHandler = this.props.reloadHandler;
 
@@ -54,6 +57,20 @@ class PersonForm extends React.Component {
                     valid: false,
                     touched: false,
                 },
+                //dropdown for role with User/Admin
+                role: {
+                    value: '',
+                    placeholder: 'client/admin...',
+                    valid: false,
+                    touched: false,
+                },
+                password: {
+                    value: '',
+                    placeholder: 'Password...',
+                    type: "password",
+                    valid: false,
+                    touched: false,
+                }
             }
         };
 
@@ -93,25 +110,31 @@ class PersonForm extends React.Component {
     };
 
     registerPerson(person) {
-        return API_USERS.postPerson(person, (result, status, error) => {
-            if (result !== null && (status === 200 || status === 201)) {
-                console.log("Successfully inserted person with id: " + result);
-                this.reloadHandler();
-            } else {
-                this.setState(({
-                    errorStatus: status,
-                    error: error
-                }));
-            }
+        return new Promise((resolve, reject) => {
+            API_USERS.postPerson(person, (result, status, error) => {
+                if (result !== null && (status === 200 || status === 201)) {
+                    console.log("Successfully inserted person with id: " + result);
+
+                    // Save the result for later use
+                    const personId = {
+                        id: result
+                    };
+                } else {
+                    // Reject the Promise if the first API call fails
+                    reject({ status, error });
+                }
+            });
         });
     }
 
-    handleSubmit() {
+handleSubmit() {
         let person = {
             name: this.state.formControls.name.value,
             email: this.state.formControls.email.value,
             age: this.state.formControls.age.value,
-            address: this.state.formControls.address.value
+            address: this.state.formControls.address.value,
+            role: this.state.formControls.role.value,
+            password: this.state.formControls.password.value
         };
 
         console.log(person);
@@ -171,9 +194,35 @@ class PersonForm extends React.Component {
                     />
                 </FormGroup>
 
+                <FormGroup id='role'>
+                    <Label for='roleField'> Role: </Label>
+                    <Input name='role' id='roleField' placeholder={this.state.formControls.role.placeholder}
+                           type="select"
+                           onChange={this.handleChange}
+                           defaultValue={this.state.formControls.role.value}
+                           touched={this.state.formControls.role.touched? 1 : 0}
+                           valid={this.state.formControls.role.valid}
+                           required>
+                        <option value="client">client</option>
+                        <option value="admin">admin</option>
+                    </Input>
+
+                </FormGroup>
+
+                <FormGroup id='passsword'>
+                    <Label for='passwordField'> Password: </Label>
+                    <Input name='password' id='passwordField' type="password" placeholder={this.state.formControls.password.placeholder}
+                           onChange={this.handleChange}
+                           defaultValue={this.state.formControls.password.value}
+                           touched={this.state.formControls.password.touched? 1 : 0}
+                           valid={this.state.formControls.password.valid}
+                           required
+                    />
+                </FormGroup>
+
                     <Row>
                         <Col sm={{size: '4', offset: 8}}>
-                            <Button type={"submit"} disabled={!this.state.formIsValid} onClick={this.handleSubmit}>  Submit </Button>
+                            <Button type={"submit"}  onClick={this.handleSubmit}>  Submit </Button>
                         </Col>
                     </Row>
 

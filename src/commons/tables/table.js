@@ -15,7 +15,12 @@ class Table extends Component {
             filters: [],
             getTrPropsFunction: props.getTrProps,
             pageSize: props.pageSize || 10,
+            onRowClick: props.onRowClick,
+            rows: props.rows,
         };
+        this.props = props;
+        this.handleChange = this.handleChange.bind(this);
+        this.handleRowClick = this.handleRowClick.bind(this);
     }
 
     search() {
@@ -50,20 +55,33 @@ class Table extends Component {
         this.forceUpdate();
     }
 
+    handleRowClick = (row) => {
+        console.log("Clicked row data:", row);
+        if (this.state.onRowClick) {
+            this.state.onRowClick(row);
+        }
+    };
 
     getTRPropsType(state, rowInfo) {
         if (rowInfo) {
             return {
+                onClick: (e, handleOriginal) => {
+                    if (state.onRowClick) {  // Check if onRowClick prop is defined
+                        state.onRowClick(rowInfo.original); // Handle row click
+                    }
+                    if (handleOriginal) {
+                        handleOriginal();
+                    }
+                },
+
                 style: {
                     textAlign: "center"
                 }
             };
-        }
-        else
+        } else {
             return {};
+        }
     }
-
-
 
     render() {
         let data = this.state.data ? this.state.data.filter(data => this.filter(data)) : [];
@@ -96,6 +114,7 @@ class Table extends Component {
                             style={{
                                 height: '300px'
                             }}
+                            onRowClick={this.handleRowClick}
                         />
                     </Col>
                 </Row>

@@ -11,6 +11,7 @@ export default class Field extends React.Component {
         error: PropTypes.string,
         label: PropTypes.string,
         onChange: PropTypes.func,
+        onClick: PropTypes.func,
     };
 
     static defaultProps = {
@@ -38,6 +39,10 @@ export default class Field extends React.Component {
         return this.props.onChange(event);
     };
 
+    onClick = event => {
+        return this.props.onClick(event);
+    }
+
     render() {
         const {focused, value, error, label} = this.state;
         const {id, locked} = this.props;
@@ -53,6 +58,7 @@ export default class Field extends React.Component {
                     onChange={this.onChange}
                     onFocus={() => !locked && this.setState({focused: true})}
                     onBlur={() => !locked && this.setState({focused: false})}
+                    onClick={this.onClick}
                 />
                 <label htmlFor={id} className={error && 'error'}>
                     {error || label}
