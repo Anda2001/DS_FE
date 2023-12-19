@@ -160,12 +160,13 @@ class DevicePopup extends React.Component {
 
     handleEdit() {
         console.log(this.state.formControls.user);
+        console.log(this.state.selectedUserId);
         let device = {
             id: this.state.deviceId,
             description: this.state.formControls.description.value,
             maximumHourlyEnergyConsumption: this.state.formControls.maximumHourlyEnergyConsumption.value,
             address: this.state.formControls.address.value,
-            user: this.state.selectedUserId // Use the selected user id
+            user: this.state.selectedUserId.id // Use the selected user id
         };
         console.log(device);
         this.updateDevice(device);

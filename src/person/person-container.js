@@ -41,11 +41,11 @@ class PersonContainer extends React.Component {
         const currentUser = this.state.user;
         this.props.setUser(currentUser);
         console.log(currentUser);
-        if (currentUser === null ||currentUser.role !== "admin") {
-            this.props.history.push('/');
-        }else{
+        // if (currentUser === null ||currentUser.role !== "admin") {
+        //     this.props.history.push('/');
+        // }else{
             this.fetchPersons();
-        }
+        //}
     }
 
     fetchPersons() {

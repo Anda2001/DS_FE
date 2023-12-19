@@ -167,6 +167,7 @@ class PersonPopup extends React.Component {
         console.log(person);
         this.updatePerson(person);
         this.reloadHandler();
+        console.log("reloaded");
     }
 
     handleDelete() {

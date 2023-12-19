@@ -7,56 +7,33 @@ import {
     DropdownToggle,
     Nav,
     Navbar,
-    NavbarBrand,
+    NavbarBrand, NavItem,
     NavLink,
     UncontrolledDropdown
 } from 'reactstrap';
-import {Route} from "react-router-dom";
-import PersonContainer from "./person/person-container";
+import {Link, Route} from "react-router-dom";
 
 const textStyle = {
     color: 'white',
     textDecoration: 'none'
 };
 
-const NavigationBar = (props) => {
-
-    return (
-        <div>
+const NavigationBar = () => (
+    <div>
         <Navbar color="dark" light expand="md">
             <NavbarBrand href="/">
-                <img src={logo} width={"50"}
-                     height={"50"}/>
+                <img src={logo} alt="Logo" width="50" height="50" />
             </NavbarBrand>
             <Nav className="mr-auto" navbar>
-
-                <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle style={textStyle} nav caret>
-                        Menu
-                    </DropdownToggle>
-                    <DropdownMenu right>
-
-                        <DropdownItem>
-                            <NavLink href="/person">Persons</NavLink>
-                            {/*<Route*/}
-                            {/*    exact*/}
-                            {/*    path='/person'*/}
-                            {/*    render={(props) => <PersonContainer {...props} user={this.state.user} setUser={this.setUser}/>}*/}
-                            {/*/>*/}
-                        </DropdownItem>
-
-                        <DropdownItem>
-                            <NavLink href="/device">Devices</NavLink>
-                        </DropdownItem>
-
-
-                    </DropdownMenu>
-                </UncontrolledDropdown>
-
+                <NavItem style={{margin:"5px"}}>
+                    <Link to="/person" style={textStyle}>Persons</Link>
+                </NavItem>
+                <NavItem style={{margin:"5px"}}>
+                    <Link to="/device" style={textStyle}>Devices</Link>
+                </NavItem>
             </Nav>
         </Navbar>
     </div>
-)
-};
+);
 
 export default NavigationBar

@@ -15,6 +15,9 @@ import NavBar from "../nav-bar";
 import DeviceClientTable from "./components/device-table";
 import * as API_DEVICES from "../device/api/device-api";
 import * as API_USERS from "../person/api/person-api";
+import SockJsClient from 'react-stomp';
+
+const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 class ClientContainer extends React.Component {
 
@@ -36,11 +39,11 @@ class ClientContainer extends React.Component {
         const currentUser = this.state.user;
         this.props.setUser(currentUser);
         console.log(currentUser);
-        if (currentUser === null ||currentUser.role !== "client") {
-            this.props.history.push('/');
-        }else {
+        // if (currentUser === null ||currentUser.role !== "client") {
+        //     this.props.history.push('/');
+        // }else {
             this.fetchDevices();
-        }
+        //}
     }
 
     async fetchUserById(userId) {
@@ -74,9 +77,11 @@ class ClientContainer extends React.Component {
                                 user: users[index] ? {id: users[index].id, name: users[index].name} : {id: null, name: 'Unknown'}
                             }));
 
+                            const filterredResult = updatedResult.filter(device => device.user.id === this.state.user.id);
+
                             // Update the state
                             this.setState({
-                                tableData: updatedResult,
+                                tableData: filterredResult,
                                 isLoaded: true
                             });
                         })

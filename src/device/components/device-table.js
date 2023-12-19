@@ -37,7 +37,6 @@ class DeviceTable extends React.Component {
             tableData: this.props.tableData,
             selectedDevice: null,
         };
-        console.log("pula",props);
     }
 
     handleRowClick = (device) => {

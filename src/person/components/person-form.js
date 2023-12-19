@@ -139,6 +139,7 @@ handleSubmit() {
 
         console.log(person);
         this.registerPerson(person);
+        this.reloadHandler();
     }
 
     render() {
