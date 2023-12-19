@@ -10,6 +10,8 @@ import {
     ModalHeader,
     Row
 } from 'reactstrap';
+import moment from 'moment';
+
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -36,8 +38,9 @@ class ClientContainer extends React.Component {
             error: null,
             user: this.props.user,
             selectedDate: new Date(),
+            selectedDateString: moment(new Date()).utc().format('YYYY-MM-DD'),
             chartData: null,
-            selectedDeviceId: null,
+            selectedDeviceId: 7,
         };
     }
 
@@ -50,6 +53,7 @@ class ClientContainer extends React.Component {
         //     this.props.history.push('/');
         // }else {
             this.fetchDevices();
+            //this.fetchDeviceHourlyConsumption();
         //}
     }
 
@@ -115,47 +119,80 @@ class ClientContainer extends React.Component {
         }
     }
 
-    fetchChartData() {
-        const data = [
-            {
-                "id": 43,
-                "hour": "2023-12-19T18:00:00.000+00:00",
-                "deviceId": 7,
-                "hourlyConsumption": 166.358,
-                "links": []
-            },
-            {
-                "id": 44,
-                "hour": "2023-12-19T19:00:00.000+00:00",
-                "deviceId": 7,
-                "hourlyConsumption": 172.358,
-                "links": []
-            },
-            {
-                "id": 45,
-                "hour": "2023-12-19T20:00:00.000+00:00",
-                "deviceId": 7,
-                "hourlyConsumption": 180.358,
-                "links": []
-            },
-            {
-                "id": 46,
-                "hour": "2023-12-19T21:00:00.000+00:00",
-                "deviceId": 7,
-                "hourlyConsumption": 190.358,
-                "links": []
-            },
-            
-            // Add more data points here
-        ];
-    
-        const chartData = data.map(item => ({
-            hour: new Date(item.hour).getHours(),
-            hourlyConsumption: item.hourlyConsumption
-        }));
-    
-        this.setState({chartData});
+    async fetchDeviceHourlyConsumption() {
+        try {
+            await API_DEVICES.getHourlyEnergyConsumption( this.state.selectedDeviceId , this.state.selectedDateString , (result, status, err) => {
+                if (result !== null && status === 200) {
+                    // Create an array of promises for fetching user details
+                    const chartData = result.map(item => ({
+                        hour: new Date(item.hour).getHours(),
+                        hourlyConsumption: item.hourlyConsumption
+                    }));
+
+                    this.setState({chartData});
+                    console.log(result);
+                } else {
+                    this.setState({
+                        errorStatus: status,
+                        error: err
+                    });
+                }
+            });
+        }
+        catch (error) {
+            console.error('Error fetching devices:', error);
+            this.setState({
+                errorStatus: 500,  // Update with appropriate status code
+                error: 'Error fetching devices'
+            });
+        }
     }
+
+    handleDeviceChange = event => {
+        this.setState({selectedDeviceId: event.target.value});
+    };
+
+    // fetchChartData() {
+    //     const data = [
+    //         {
+    //             "id": 43,
+    //             "hour": "2023-12-19T18:00:00.000+00:00",
+    //             "deviceId": 7,
+    //             "hourlyConsumption": 166.358,
+    //             "links": []
+    //         },
+    //         {
+    //             "id": 44,
+    //             "hour": "2023-12-19T19:00:00.000+00:00",
+    //             "deviceId": 7,
+    //             "hourlyConsumption": 172.358,
+    //             "links": []
+    //         },
+    //         {
+    //             "id": 45,
+    //             "hour": "2023-12-19T20:00:00.000+00:00",
+    //             "deviceId": 7,
+    //             "hourlyConsumption": 180.358,
+    //             "links": []
+    //         },
+    //         {
+    //             "id": 46,
+    //             "hour": "2023-12-19T21:00:00.000+00:00",
+    //             "deviceId": 7,
+    //             "hourlyConsumption": 190.358,
+    //             "links": []
+    //         },
+    //
+    //         // Add more data points here
+    //     ];
+    //
+    //     const chartData = data.map(item => ({
+    //         hour: new Date(item.hour).getHours(),
+    //         hourlyConsumption: item.hourlyConsumption
+    //     }));
+    //
+    //     this.setState({chartData});
+    // }
 
 
     render() {
@@ -177,8 +214,14 @@ class ClientContainer extends React.Component {
                             <DatePicker
                                 selected={this.state.selectedDate}
                                 onChange={date => {
-                                    this.setState({selectedDate: date});
-                                    this.fetchChartData(date);
+                                    //const adjustedDate = moment(date).utcOffset(0).startOf('day').set({ hour: 19, minute: 0, second: 0 }).toISOString();
+                                    //const adjustedDate = moment(date).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toISOString();
+                                    const adjustedDate = moment(date).utc().format('YYYY-MM-DD');
+                                    console.log("adjustedDate",adjustedDate);
+                                    this.setState({ selectedDate: date }); // Store the Date object if needed
+                                    this.setState({ selectedDateString: adjustedDate }); // Store the formatted string if needed elsewhere
+                                    this.setState({ selectedDeviceId: 7 });
+                                    this.fetchDeviceHourlyConsumption();
                                 }}
                             />
                         </Col>
