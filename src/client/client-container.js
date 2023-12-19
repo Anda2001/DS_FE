@@ -115,10 +115,6 @@ class ClientContainer extends React.Component {
         }
     }
 
-    handleDeviceChange = event => {
-        this.setState({selectedDeviceId: event.target.value});
-    };
-
     fetchChartData() {
         const data = [
             {
@@ -178,16 +174,13 @@ class ClientContainer extends React.Component {
                                 errorStatus={this.state.errorStatus}
                                 error={this.state.error}
                             />}
-                            <div>
-                                <DatePicker selected={this.state.startDate} onChange={this.handleDateChange} />
-                                <select value={this.state.selectedDeviceId} onChange={this.handleDeviceChange}>
-                                    {this.state.tableData.map(device => (
-                                        <option key={device.id} value={device.id}>
-                                            {device.id}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+                            <DatePicker
+                                selected={this.state.selectedDate}
+                                onChange={date => {
+                                    this.setState({selectedDate: date});
+                                    this.fetchChartData(date);
+                                }}
+                            />
                         </Col>
                     </Row>
                 </Card>
