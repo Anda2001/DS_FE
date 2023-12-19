@@ -11,6 +11,10 @@ import {
     Row
 } from 'reactstrap';
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+
 import NavBar from "../nav-bar";
 import DeviceClientTable from "./components/device-table";
 import * as API_DEVICES from "../device/api/device-api";
@@ -30,7 +34,10 @@ class ClientContainer extends React.Component {
             isLoaded: false,
             errorStatus: 0,
             error: null,
-            user: this.props.user
+            user: this.props.user,
+            selectedDate: new Date(),
+            chartData: null,
+            selectedDeviceId: null,
         };
     }
 
@@ -108,6 +115,52 @@ class ClientContainer extends React.Component {
         }
     }
 
+    handleDeviceChange = event => {
+        this.setState({selectedDeviceId: event.target.value});
+    };
+
+    fetchChartData() {
+        const data = [
+            {
+                "id": 43,
+                "hour": "2023-12-19T18:00:00.000+00:00",
+                "deviceId": 7,
+                "hourlyConsumption": 166.358,
+                "links": []
+            },
+            {
+                "id": 44,
+                "hour": "2023-12-19T19:00:00.000+00:00",
+                "deviceId": 7,
+                "hourlyConsumption": 172.358,
+                "links": []
+            },
+            {
+                "id": 45,
+                "hour": "2023-12-19T20:00:00.000+00:00",
+                "deviceId": 7,
+                "hourlyConsumption": 180.358,
+                "links": []
+            },
+            {
+                "id": 46,
+                "hour": "2023-12-19T21:00:00.000+00:00",
+                "deviceId": 7,
+                "hourlyConsumption": 190.358,
+                "links": []
+            },
+            
+            // Add more data points here
+        ];
+    
+        const chartData = data.map(item => ({
+            hour: new Date(item.hour).getHours(),
+            hourlyConsumption: item.hourlyConsumption
+        }));
+    
+        this.setState({chartData});
+    }
+
 
     render() {
         return (
@@ -124,15 +177,32 @@ class ClientContainer extends React.Component {
                             {this.state.errorStatus > 0 && <APIResponseErrorMessage
                                 errorStatus={this.state.errorStatus}
                                 error={this.state.error}
-                            />   }
+                            />}
+                            <div>
+                                <DatePicker selected={this.state.startDate} onChange={this.handleDateChange} />
+                                <select value={this.state.selectedDeviceId} onChange={this.handleDeviceChange}>
+                                    {this.state.tableData.map(device => (
+                                        <option key={device.id} value={device.id}>
+                                            {device.id}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </Col>
                     </Row>
                 </Card>
-
-
+                {this.state.chartData && (
+                    <BarChart width={500} height={300} data={this.state.chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="hour" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="hourlyConsumption" fill="#8884d8" />
+                    </BarChart>
+                )}
             </div>
         )
-
     }
 }
 

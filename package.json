@@ -11,6 +11,7 @@
     "randomcolor": "^0.5.4",
     "react": "^16.8.0",
     "react-bootstrap": "^1.3.0",
+    "react-datepicker": "^4.25.0",
     "react-dom": "^16.8.0",
     "react-moment": "^0.8.4",
     "react-router-dom": "^4.3.1",
@@ -18,8 +19,9 @@
     "react-stomp": "^5.1.0",
     "react-table": "^6.10.0",
     "reactstrap": "^7.0.2",
-    "recharts": "latest",
-    "sockjs": "^0.3.24"
+    "recharts": "^2.10.3",
+    "sockjs": "^0.3.24",
+    "victory": "^36.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
