@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "description": "Laptop",
+    "address": "Cluj",
+    "maximumHourlyEnergyConsumption": 69,
+    "user": 2,
+    "links": [
+      {
+        "rel": "deviceDetails",
+        "href": "http://localhost:8000/device/1"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "description": "Samsung",
+    "address": "Cluj-Napoca",
+    "maximumHourlyEnergyConsumption": 70,
+    "user": 1,
+    "links": [
+      {
+        "rel": "deviceDetails",
+        "href": "http://localhost:8000/device/2"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "description": "Samsung",
+    "address": "Cluj",
+    "maximumHourlyEnergyConsumption": 69,
+    "user": 2,
+    "links": [
+      {
+        "rel": "deviceDetails",
+        "href": "http://localhost:8000/device/3"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "description": "Laptop",
+    "address": "Cluj, Dej",
+    "maximumHourlyEnergyConsumption": 69,
+    "user": 3,
+    "links": [
+      {
+        "rel": "deviceDetails",
+        "href": "http://localhost:8000/device/7"
+      }
+    ]
+  }
+]
