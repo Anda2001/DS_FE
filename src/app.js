@@ -8,6 +8,7 @@ import DeviceContainer from './device/device-container'
 import ErrorPage from './commons/errorhandling/error-page';
 import styles from './commons/styles/project-style.css';
 import ClientContainer from "./client/client-container";
+import ChatRoom from "./chat/chat-container";
 
 class App extends React.Component {
     constructor(props) {
@@ -52,6 +53,12 @@ class App extends React.Component {
                             exact
                             path='/client'
                             render={(props) => <ClientContainer {...props} user={this.state.user} setUser={this.setUser}/>}
+                        />
+
+                        <Route
+                            exact
+                            path='/chat'
+                            render={(props) => <ChatRoom {...props} user={this.state.user} setUser={this.setUser}/>}
                         />
 
                         {/*{this.state.user && this.state.user.role === 'admin' && (*/}

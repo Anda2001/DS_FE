@@ -5,7 +5,8 @@ import RestApiClient from "../../commons/api/rest-client";
 const endpoint = {
     device: '/device',
     person: '/person',
-    management: '/device/consumption/device'
+    management: '/device/consumption/device',
+    managementDevice: '/device'
 };
 
 function getDevices(callback) {
@@ -95,6 +96,21 @@ function getHourlyEnergyConsumption(deviceId, date, callback) {
     RestApiClient.performRequest(request, callback);
 }
 
+function addManagementDevice(device, callback){
+    let request = new Request(HOST.backend_management_api + endpoint.managementDevice , {
+        method: 'POST',
+        headers : {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(device)
+    });
+
+    console.log("URL: " + request.url);
+
+    RestApiClient.performRequest(request, callback);
+}
+
 export {
     getDevices,
     getDeviceById,
@@ -103,5 +119,6 @@ export {
     deleteDevice,
     postPerson,
     deletePerson,
-    getHourlyEnergyConsumption
+    getHourlyEnergyConsumption,
+    addManagementDevice
 };

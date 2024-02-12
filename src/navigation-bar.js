@@ -31,6 +31,9 @@ const NavigationBar = () => (
                 <NavItem style={{margin:"5px"}}>
                     <Link to="/device" style={textStyle}>Devices</Link>
                 </NavItem>
+                <NavItem style={{margin:"5px"}}>
+                    <Link to="/chat" style={textStyle}>Chat</Link>
+                </NavItem>
             </Nav>
         </Navbar>
     </div>

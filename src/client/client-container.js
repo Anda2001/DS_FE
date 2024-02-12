@@ -40,7 +40,8 @@ class ClientContainer extends React.Component {
             selectedDate: new Date(),
             selectedDateString: moment(new Date()).utc().format('YYYY-MM-DD'),
             chartData: null,
-            selectedDeviceId: 7,
+            selectedDeviceId: null,
+            deviceIdsList: []
         };
     }
 
@@ -54,6 +55,8 @@ class ClientContainer extends React.Component {
         // }else {
             this.fetchDevices();
             //this.fetchDeviceHourlyConsumption();
+        this.setState({selectedDate: new Date()});
+        console.log("selectedDate",this.state.selectedDate);
         //}
     }
 
@@ -89,11 +92,14 @@ class ClientContainer extends React.Component {
                             }));
 
                             const filterredResult = updatedResult.filter(device => device.user.id === this.state.user.id);
-
+                            const deviceIdList = filterredResult.map(device => device.id);
+                            const firstDeviceId = deviceIdList[0];
                             // Update the state
                             this.setState({
                                 tableData: filterredResult,
-                                isLoaded: true
+                                isLoaded: true,
+                                deviceIdsList: deviceIdList,
+                                selectedDeviceId: firstDeviceId
                             });
                         })
                         .catch(error => {
@@ -152,48 +158,10 @@ class ClientContainer extends React.Component {
         this.setState({selectedDeviceId: event.target.value});
     };
 
-    // fetchChartData() {
-    //     const data = [
-    //         {
-    //             "id": 43,
-    //             "hour": "2023-12-19T18:00:00.000+00:00",
-    //             "deviceId": 7,
-    //             "hourlyConsumption": 166.358,
-    //             "links": []
-    //         },
-    //         {
-    //             "id": 44,
-    //             "hour": "2023-12-19T19:00:00.000+00:00",
-    //             "deviceId": 7,
-    //             "hourlyConsumption": 172.358,
-    //             "links": []
-    //         },
-    //         {
-    //             "id": 45,
-    //             "hour": "2023-12-19T20:00:00.000+00:00",
-    //             "deviceId": 7,
-    //             "hourlyConsumption": 180.358,
-    //             "links": []
-    //         },
-    //         {
-    //             "id": 46,
-    //             "hour": "2023-12-19T21:00:00.000+00:00",
-    //             "deviceId": 7,
-    //             "hourlyConsumption": 190.358,
-    //             "links": []
-    //         },
-    //
-    //         // Add more data points here
-    //     ];
-    //
-    //     const chartData = data.map(item => ({
-    //         hour: new Date(item.hour).getHours(),
-    //         hourlyConsumption: item.hourlyConsumption
-    //     }));
-    //
-    //     this.setState({chartData});
-    // }
-
+    handleGetData = () => {
+        // Fetch device data based on selectedDeviceId and selectedDateString
+        this.fetchDeviceHourlyConsumption();
+    };
 
     render() {
         return (
@@ -211,19 +179,31 @@ class ClientContainer extends React.Component {
                                 errorStatus={this.state.errorStatus}
                                 error={this.state.error}
                             />}
-                            <DatePicker
-                                selected={this.state.selectedDate}
-                                onChange={date => {
-                                    //const adjustedDate = moment(date).utcOffset(0).startOf('day').set({ hour: 19, minute: 0, second: 0 }).toISOString();
-                                    //const adjustedDate = moment(date).utcOffset(0).set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toISOString();
-                                    const adjustedDate = moment(date).utc().format('YYYY-MM-DD');
-                                    console.log("adjustedDate",adjustedDate);
-                                    this.setState({ selectedDate: date }); // Store the Date object if needed
-                                    this.setState({ selectedDateString: adjustedDate }); // Store the formatted string if needed elsewhere
-                                    this.setState({ selectedDeviceId: 7 });
-                                    this.fetchDeviceHourlyConsumption();
-                                }}
-                            />
+                            <select value={this.state.selectedDeviceId} onChange={this.handleDeviceChange}>
+                                {this.state.deviceIdsList.map(deviceId => (
+                                    <option key={deviceId} value={deviceId}>
+                                        Device {deviceId}
+                                    </option>
+                                ))}
+                            </select>
+                            {/*<DatePicker*/}
+                            {/*    selected={this.state.selectedDate}*/}
+                            {/*    onChange={date => {*/}
+                            {/*        const adjustedDate = moment(date).utc().format('YYYY-MM-DD');*/}
+                            {/*        console.log("adjustedDate",adjustedDate);*/}
+                            {/*        this.setState({ selectedDate: date }); // Store the Date object if needed*/}
+                            {/*        this.setState({ selectedDateString: adjustedDate }); // Store the formatted string if needed elsewher*/}
+                            {/*    }}*/}
+                            {/*/>*/}
+
+                            <input type="date" value={this.state.selectedDate} onChange={event => {
+                                const adjustedDate = moment(event.target.value).utc().add(1, 'day').format('YYYY-MM-DD');
+                                this.setState({selectedDate: event.target.value})
+                                this.setState({selectedDateString: adjustedDate});
+                            }}/>
+
+                            <Button onClick={this.handleGetData}>Get Device Data</Button>
+
                         </Col>
                     </Row>
                 </Card>

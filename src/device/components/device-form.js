@@ -132,7 +132,23 @@ class DeviceForm extends React.Component {
     };
 
     addDevice(device) {
-        return API_DEVICES.postDevice(device, (result, status, error) => {
+        let dev = null;
+        API_DEVICES.postDevice(device, (result, status, error) => {
+            if (result !== null && (status === 200 || status === 201)) {
+                dev = result;
+                console.log("Successfully inserted device with id: " + result);
+                this.reloadHandler();
+            } else {
+                this.setState({
+                    errorStatus: status,
+                    error: error
+                });
+            }
+        });
+
+        device.id = dev;
+
+        return API_DEVICES.addManagementDevice(device, (result, status, error) => {
             if (result !== null && (status === 200 || status === 201)) {
                 console.log("Successfully inserted device with id: " + result);
                 this.reloadHandler();

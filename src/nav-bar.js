@@ -7,10 +7,11 @@ import {
     DropdownToggle,
     Nav,
     Navbar,
-    NavbarBrand,
+    NavbarBrand, NavItem,
     NavLink,
     UncontrolledDropdown
 } from 'reactstrap';
+import {Link} from "react-router-dom";
 
 const textStyle = {
     color: 'white',
@@ -24,6 +25,14 @@ const NavBar = () => (
                 <img src={logo} width={"50"}
                      height={"50"}/>
             </NavbarBrand>
+            <Nav className="mr-auto" navbar>
+                <NavItem style={{margin:"5px"}}>
+                    <Link to="/client" style={textStyle}>Devices</Link>
+                </NavItem>
+                <NavItem style={{margin:"5px"}}>
+                    <Link to="/chat" style={textStyle}>Chat</Link>
+                </NavItem>
+            </Nav>
         </Navbar>
     </div>
 );
