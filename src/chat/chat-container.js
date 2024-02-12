@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import * as API_USERS from "../person/api/person-api";
+import NavBar from "../nav-bar";
 
 var stompClient =null;
 
@@ -161,20 +162,27 @@ const ChatRoom = (props) => {
 
 
     return (
-        <div className="container">
-                <div className="chat-box">
-                    <div className="member-list">
-                        <ul>
-                            <li onClick={()=>{setTab("CHATROOM")}} className={`member ${tab==="CHATROOM" && "active"}`}>Chatroom</li>
-                            {[...privateChats.keys()].map((name,index)=>(
-                                <li onClick={()=>{setTab(name)}} className={`member ${tab===name && "active"}`} key={index}>{name}</li>
-                            ))}
-                        </ul>
-                    </div>
+        <div>
+            <NavBar/>
+
+            <div className="container" style={{ display: 'flex', flexDirection: 'row', color: 'white', backgroundColor: '#20B2AA' }}>
+                <div className="member-list" style={{ flexBasis: '200px', borderRight: '1px solid #ccc', padding: '10px' }}>
+                    <ul style={{ listStyle: 'none', padding: 0 }}>
+                        <li onClick={()=>{setTab("CHATROOM")}} className={`member ${tab==="CHATROOM" && "active"}`} style={{ padding: '10px', backgroundColor: tab==="CHATROOM" ? 'white' : 'transparent', cursor: 'pointer', borderRadius: '5px', marginBottom: '10px', color: tab==="CHATROOM" ? 'black' : 'white' }}>
+                            <i className="fas fa-comments" style={{ marginRight: '10px' }}></i>Chatroom
+                        </li>
+                        {[...privateChats.keys()].map((name,index)=>(
+                            <li onClick={()=>{setTab(name)}} className={`member ${tab===name && "active"}`} key={index} style={{ padding: '10px', backgroundColor: tab===name ? 'white' : 'transparent', cursor: 'pointer', borderRadius: '5px', marginBottom: '10px', color: tab===name ? 'black' : 'white' }}>
+                                <i className="fas fa-comments" style={{ marginRight: '10px' }}></i>{name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="chat-box" style={{ flexGrow: 1, padding: '10px' }}>
                     {tab==="CHATROOM" && <div className="chat-content">
-                        <ul className="chat-messages">
+                        <ul className="chat-messages" style={{ listStyle: 'none', padding: 0 }}>
                             {publicChats.map((chat,index)=>(
-                                <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
+                                <li className={`message ${chat.senderName === userData.username && "self"}`} key={index} style={{ backgroundColor: '#F0F0F0', padding: '10px', borderRadius: '5px', marginBottom: '10px', color: 'black' }}>
                                     {chat.senderName !== userData.username && <div className="avatar">{chat.senderName}</div>}
                                     <div className="message-data">{chat.message}</div>
                                     {chat.senderName === userData.username && <div className="avatar self">{chat.senderName}</div>}
@@ -182,15 +190,15 @@ const ChatRoom = (props) => {
                             ))}
                         </ul>
 
-                        <div className="send-message">
-                            <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} />
-                            <button type="button" className="send-button" onClick={sendValue}>send</button>
+                        <div className="send-message" style={{ marginTop: '10px' }}>
+                            <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} style={{ marginRight: '10px', padding: '10px', borderRadius: '5px', border: 'none' }} />
+                            <button type="button" className="send-button" onClick={sendValue} style={{ padding: '10px', borderRadius: '5px', border: 'none', backgroundColor: 'lightblue', cursor: 'pointer' }}>send</button>
                         </div>
                     </div>}
                     {tab!=="CHATROOM" && <div className="chat-content">
-                        <ul className="chat-messages">
+                        <ul className="chat-messages" style={{ listStyle: 'none', padding: 0 }}>
                             {[...privateChats.get(tab)].map((chat,index)=>(
-                                <li className={`message ${chat.senderName === userData.username && "self"}`} key={index}>
+                                <li className={`message ${chat.senderName === userData.username && "self"}`} key={index} style={{ backgroundColor: '#F0F0F0', padding: '10px', borderRadius: '5px', marginBottom: '10px', color: 'black' }}>
                                     {chat.senderName !== userData.username && <div className="avatar">{chat.senderName}</div>}
                                     <div className="message-data">{chat.message}</div>
                                     {chat.senderName === userData.username && <div className="avatar self">{chat.senderName}</div>}
@@ -198,12 +206,26 @@ const ChatRoom = (props) => {
                             ))}
                         </ul>
 
-                        <div className="send-message">
-                            <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} />
-                            <button type="button" className="send-button" onClick={sendPrivateValue}>send</button>
+                        <div className="send-message" style={{ marginTop: '10px' }}>
+                            <input type="text" className="input-message" placeholder="enter the message" value={userData.message} onChange={handleMessage} style={{ marginRight: '10px', padding: '10px', borderRadius: '5px', border: 'none' }} />
+                            <button type="button" className="send-button" onClick={sendPrivateValue} style={{ padding: '10px', borderRadius: '5px', border: 'none', backgroundColor: 'lightblue', cursor: 'pointer' }}>send</button>
                         </div>
                     </div>}
                 </div>
+            </div>
+            <div
+                style={{
+                    position: 'fixed',
+                    bottom: '0',
+                    width: '100%',
+                    backgroundColor: '#20B2AA',
+                    color: 'white',
+                    padding: '10px',
+                    textAlign: 'center'
+                    }}
+            >
+                You are connected as {user.name}
+            </div>
 
         </div>
     )
